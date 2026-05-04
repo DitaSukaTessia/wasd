@@ -61,7 +61,7 @@ function PhotoItem({ photo, onClick, index, isMobile }) {
       />
       <div
         className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${
-          active ? "opacity-0" : "opacity-30"
+          active ? "opacity-0" : "opacity-70"
         }`}
         style={{
           background:
@@ -83,13 +83,27 @@ function Row({ items, direction = "left", onClick, rowIndex, isMobile }) {
   const dragStartTranslate = useRef(0);
   // FIX #3: Track apakah ini drag horizontal atau vertical
   const dragAxis = useRef(null); // null | "horizontal" | "vertical"
+  const isPageScrolling = useRef(false);
 
   const infiniteItems = [...items, ...items, ...items];
   const speed = isMobile ? 0.25 : 0.35;
 
   useEffect(() => {
+    let scrollTimer;
+    const onScroll = () => {
+      isPageScrolling.current = true;
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        isPageScrolling.current = false;
+      }, 150);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
     const animate = () => {
-      if (!isDragging.current && ref.current) {
+      if (!isDragging.current && !isPageScrolling.current && ref.current) {
         xRef.current += direction === "left" ? -speed : speed;
         const totalWidth = ref.current.scrollWidth / 3;
         if (xRef.current <= -totalWidth) xRef.current += totalWidth;
@@ -190,7 +204,7 @@ function Row({ items, direction = "left", onClick, rowIndex, isMobile }) {
         ref={ref}
         className="flex cursor-grab select-none"
         // FIX #5: gap antar row sedikit lebih besar di mobile
-        style={{ gap: isMobile ? "10px" : "12px", willChange: "transform" }}
+        style={{ gap: isMobile ? "10px" : "12px" }}
       >
         {infiniteItems.map((p, i) => (
           <PhotoItem

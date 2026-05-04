@@ -1,334 +1,560 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useApp } from "../../lib/AppContext";
 import { useTypingAnimation } from "../../hooks/useTypingAnimation";
-import { FloatingPlanet } from "../ui/Planet";
-import { Gift, Star, Lock, Heart, Sparkles } from "lucide-react";
 
 const GIFT_LETTER = `Untuk Eka Meilani yang bersinar... ✨
-
+ 
 Kalau kamu bisa membaca ini, artinya kamu sudah cukup berani dan penasaran untuk membuka hadiah ini. Dan itu hal yang membuatmu istimewa.
-
+ 
 Hadiah sejatinya bukan soal benda. Ini tentang momen. Tentang perasaan. Tentang kata-kata yang mungkin susah diucapkan secara langsung.
-
+ 
 Jadi di sini, izinkan aku berkata dengan jujur:
-
+ 
 Kamu adalah seseorang yang bikin hari-hari terasa lebih berwarna. Kehadiranmu, walau kadang dari jauh, selalu terasa hangat seperti sinar matahari yang menembus awan.
-
+ 
 Di hari ulang tahunmu yang ke-18 ini, aku berharap:
 🌟 Bahwa setiap impianmu menemukan jalannya
 💫 Bahwa setiap langkahmu dipenuhi keberanian
 🪐 Bahwa kamu terus menjelajahi dunia dengan rasa ingin tahu
 ✨ Dan bahwa kamu tahu, selalu ada yang bangga padamu
-
+ 
 Ini bukan sekadar hadiah — ini adalah sebuah janji bahwa aku akan selalu ada, mendukungmu dari belakang, seperti bintang-bintang yang terus bersinar meski siang hari.
-
+ 
 Selamat ulang tahun, Eka. Semoga 18 menjadi awal dari petualanganmu yang paling indah. 🚀
-
+ 
 Dengan segala ketulusan dari galaksi ini,
 Seseorang yang beruntung bisa mengenalmu 💜`;
 
-function EnvelopeGift({ onOpen, opened }) {
+// ── Particle burst ───────────────────────────────────────────────────────────
+// FIX #3: particles di-generate sekali dengan useMemo, bukan tiap render
+// FIX #13: onDone callback untuk unmount setelah animasi selesai
+function ParticleBurst({ onDone }) {
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, i) => ({
+        id: i,
+        x: (Math.random() - 0.5) * 500,
+        y: (Math.random() - 0.5) * 340,
+        size: Math.random() * 4 + 2,
+        delay: Math.random() * 0.3,
+        dur: 0.8 + Math.random() * 0.6,
+      })),
+    [],
+  );
+
+  // FIX #13: Unmount setelah semua partikel selesai animasi
+  useEffect(() => {
+    const maxDur = Math.max(...particles.map((p) => p.delay + p.dur));
+    const t = setTimeout(onDone, (maxDur + 0.1) * 1000);
+    return () => clearTimeout(t);
+  }, [onDone, particles]);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            background:
+              p.id % 3 === 0
+                ? "rgba(79,110,247,0.9)"
+                : p.id % 3 === 1
+                  ? "rgba(255,255,255,0.6)"
+                  : "rgba(79,110,247,0.4)",
+            animation: `burst ${p.dur}s ease-out ${p.delay}s forwards`,
+            "--tx": `${p.x}px`,
+            "--ty": `${p.y}px`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes burst {
+          0%   { opacity: 1; transform: translate(0,0) scale(1); }
+          100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ── Envelope / gift button ───────────────────────────────────────────────────
+function EnvelopeGift({ onOpen }) {
   const [hover, setHover] = useState(false);
   const [popped, setPopped] = useState(false);
+  // FIX #11: loading state untuk mengisi gap 1.4 detik
+  const [opening, setOpening] = useState(false);
+  // FIX #7: touch support untuk flap animation
+  const [touched, setTouched] = useState(false);
 
   const handleClick = () => {
-    if (opened) return;
+    if (popped || opening) return;
     setPopped(true);
+    setOpening(true);
     setTimeout(() => onOpen(), 600);
   };
 
+  // FIX #7: flap terangkat saat hover di desktop atau touch di mobile
+  const flapLifted = (hover || touched) && !popped;
+
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Particles on open */}
-      {popped && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          {[...Array(30)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: `${Math.random() * 8 + 4}px`,
-                height: `${Math.random() * 8 + 4}px`,
-                left: `${40 + Math.random() * 20}%`,
-                top: "50%",
-                background: [
-                  "#fbbf24",
-                  "#ec4899",
-                  "#7c3aed",
-                  "#67e8f9",
-                  "#34d399",
-                ][Math.floor(Math.random() * 5)],
-                animation: `particle-${i} 1.5s ease-out forwards`,
-                transform: `translate(${(Math.random() - 0.5) * 600}px, ${(Math.random() - 0.5) * 400}px)`,
-                opacity: 0,
-                transition: `all ${0.5 + Math.random()}s ease-out`,
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* FIX #13: ParticleBurst di-unmount via state setelah animasi selesai */}
+      {popped && <ParticleBurst onDone={() => setPopped(false)} />}
 
       <button
         onClick={handleClick}
         onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        disabled={opened}
-        className="relative group cursor-pointer"
+        onMouseLeave={() => {
+          setHover(false);
+          setTouched(false);
+        }}
+        // FIX #7: touch events untuk flap di mobile
+        onTouchStart={() => setTouched(true)}
+        onTouchEnd={() => setTouched(false)}
+        disabled={opening}
+        aria-label="Buka hadiah spesialmu" // FIX #12
+        className="relative"
         style={{ perspective: "1000px" }}
       >
         <div
-          className={`glass-card-strong p-10 md:p-14 text-center transition-all duration-500 ${
-            hover && !opened ? "glow-gold scale-105" : ""
-          } ${popped ? "scale-110" : ""}`}
-          style={{ border: "1px solid rgba(251,191,36,0.25)" }}
+          className="transition-all duration-500"
+          style={{
+            transform: opening
+              ? "scale(1.06)"
+              : hover || touched
+                ? "scale(1.03)"
+                : "scale(1)",
+          }}
         >
-          {/* Envelope flap */}
           <div
-            className="mb-6 transition-transform duration-700 origin-top"
+            className="p-8 sm:p-10 md:p-14 text-center rounded-xl transition-all duration-500"
             style={{
-              transform: opened
-                ? "rotateX(180deg)"
-                : hover
-                  ? "rotateX(-20deg)"
-                  : "rotateX(0deg)",
-              transformStyle: "preserve-3d",
+              background:
+                hover || touched
+                  ? "rgba(79,110,247,0.08)"
+                  : "rgba(13,15,24,0.9)",
+              border:
+                hover || touched
+                  ? "1px solid rgba(79,110,247,0.35)"
+                  : "1px solid rgba(255,255,255,0.07)",
+              boxShadow:
+                hover || touched ? "0 0 40px rgba(79,110,247,0.12)" : "none",
+              backdropFilter: "blur(12px)",
             }}
           >
-            {/* Envelope visual */}
-            <div className="relative w-64 mx-auto">
+            {/* FIX #6: Envelope responsif — w-36 di mobile, w-56 di desktop */}
+            <div
+              className="relative w-36 sm:w-48 md:w-56 mx-auto mb-8 transition-transform duration-700 origin-top"
+              style={{
+                transform: opening ? "rotateX(180deg)" : "rotateX(0deg)",
+                transformStyle: "preserve-3d",
+              }}
+            >
               {/* Body */}
               <div
-                className="w-full rounded-b-2xl overflow-hidden"
+                className="w-full rounded-b-xl overflow-hidden relative"
                 style={{
-                  height: "160px",
-                  background:
-                    "linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1))",
-                  border: "2px solid rgba(251,191,36,0.3)",
+                  height: "clamp(90px, 22vw, 140px)",
+                  background: "rgba(79,110,247,0.06)",
+                  border: "1px solid rgba(79,110,247,0.2)",
                   borderTop: "none",
                 }}
               >
-                {/* Inner V-fold lines */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, transparent 49%, rgba(79,110,247,0.07) 49.5%, rgba(79,110,247,0.07) 50%, transparent 50%), linear-gradient(225deg, transparent 49%, rgba(79,110,247,0.07) 49.5%, rgba(79,110,247,0.07) 50%, transparent 50%)",
+                  }}
+                />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="w-full h-full"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, transparent 49%, rgba(251,191,36,0.1) 49.5%, rgba(251,191,36,0.1) 50%, transparent 50%), linear-gradient(225deg, transparent 49%, rgba(251,191,36,0.1) 49.5%, rgba(251,191,36,0.1) 50%, transparent 50%)",
-                    }}
-                  />
-                </div>
-
-                {/* Seal / emoji */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span
-                    className="text-5xl transition-transform duration-300"
-                    style={{ transform: hover ? "scale(1.2)" : "scale(1)" }}
-                  >
-                    {opened ? "💝" : hover ? "🎀" : "🎁"}
-                  </span>
+                  {/* FIX #11: tunjukkan spinner saat opening */}
+                  {opening ? (
+                    <div
+                      className="w-8 h-8 rounded-full border-2 border-indigo-400/30 border-t-indigo-400"
+                      style={{ animation: "spin 0.8s linear infinite" }}
+                    />
+                  ) : (
+                    <span
+                      className="text-3xl sm:text-4xl transition-transform duration-300"
+                      style={{
+                        transform: flapLifted ? "scale(1.15)" : "scale(1)",
+                      }}
+                    >
+                      {flapLifted ? "🎀" : "🎁"}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Flap triangle */}
+              {/* Flap — FIX #7: animasi flap pakai flapLifted yang support touch */}
               <div
-                className="absolute top-0 left-0 w-full"
+                className="absolute top-0 left-0 w-full transition-all duration-400"
                 style={{
-                  height: "90px",
+                  height: "clamp(55px, 14vw, 80px)",
                   clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                  background:
-                    "linear-gradient(180deg, rgba(251,191,36,0.2), rgba(245,158,11,0.1))",
-                  border: "2px solid rgba(251,191,36,0.3)",
+                  background: "rgba(79,110,247,0.08)",
+                  border: "1px solid rgba(79,110,247,0.2)",
                   transformOrigin: "top",
-                  transform:
-                    hover && !opened ? "rotateX(-30deg)" : "rotateX(0deg)",
-                  transition: "transform 0.4s ease",
+                  transform: flapLifted ? "rotateX(-25deg)" : "rotateX(0deg)",
                 }}
               />
             </div>
+
+            <p
+              className="mb-1"
+              style={{
+                fontFamily: "'Syne', sans-serif",
+                fontSize: "15px",
+                fontWeight: 700,
+                color: "rgba(255,255,255,0.75)",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Hadiah Spesialmu
+            </p>
+            <p
+              style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: "10px",
+                letterSpacing: "0.15em",
+                color: opening
+                  ? "rgba(79,110,247,0.8)"
+                  : "rgba(79,110,247,0.6)",
+              }}
+            >
+              {/* FIX #11: label berubah saat opening */}
+              {opening ? "MEMBUKA..." : "KLIK UNTUK MEMBUKA"}
+            </p>
           </div>
-
-          <p className="font-cinzel text-yellow-300 text-lg mb-1">
-            Hadiah Spesialmu
-          </p>
-          <p className="font-exo text-gray-400 text-xs tracking-wider">
-            {opened ? "💝 Sudah dibuka" : "✦ Klik untuk membuka ✦"}
-          </p>
-
-          {/* Sparkles */}
-          {hover && !opened && (
-            <div className="absolute inset-0 pointer-events-none">
-              {[...Array(8)].map((_, i) => (
-                <Sparkles
-                  key={i}
-                  size={12}
-                  className="absolute text-yellow-400"
-                  style={{
-                    top: `${10 + Math.random() * 80}%`,
-                    left: `${5 + Math.random() * 90}%`,
-                    opacity: Math.random(),
-                    animation: `twinkle 1s ease-in-out infinite`,
-                    animationDelay: `${i * 0.1}s`,
-                  }}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </button>
 
-      {!opened && (
-        <p className="font-exo text-xs text-gray-500 animate-pulse">
-          ✦ Klik kado untuk membukanya ✦
+      {!opening && (
+        <p
+          className="animate-pulse"
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "10px",
+            letterSpacing: "0.15em",
+            color: "rgba(255,255,255,0.2)",
+          }}
+        >
+          ✦ &nbsp;KETUK KADO&nbsp; ✦
         </p>
       )}
     </div>
   );
 }
 
+// ── Locked state ─────────────────────────────────────────────────────────────
+// FIX #15: tambah animasi masuk yang konsisten dengan section lain
+function Locked() {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4"
+      style={{
+        background: "#07080d",
+        animation: "rise 0.8s cubic-bezier(0.16,1,0.3,1) both",
+      }}
+    >
+      <div
+        className="p-10 text-center rounded-xl max-w-sm"
+        style={{
+          background: "rgba(13,15,24,0.9)",
+          border: "1px solid rgba(255,255,255,0.07)",
+          animation: "rise 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both",
+        }}
+      >
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <span style={{ fontSize: "18px", color: "rgba(255,255,255,0.25)" }}>
+            🔒
+          </span>
+        </div>
+        <p
+          className="mb-2"
+          style={{
+            fontFamily: "'Syne', sans-serif",
+            fontSize: "16px",
+            fontWeight: 700,
+            color: "rgba(255,255,255,0.4)",
+          }}
+        >
+          Masih Terkunci
+        </p>
+        <p
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "11px",
+            lineHeight: 1.7,
+            color: "rgba(255,255,255,0.2)",
+          }}
+        >
+          Selesaikan teka-teki terlebih dahulu untuk membuka hadiah ini.
+        </p>
+      </div>
+
+      <style>{`
+        @keyframes rise {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
 export default function GiftSection() {
   const { riddleSolved, giftOpened, setGiftOpened } = useApp();
-  const [showLetter, setShowLetter] = useState(false);
 
-  const { displayed, done } = useTypingAnimation(
-    GIFT_LETTER,
-    20,
-    showLetter ? 500 : 99999999,
-  );
+  // FIX #1: showLetter langsung true kalau giftOpened sudah true (user balik ke halaman)
+  const [showLetter, setShowLetter] = useState(giftOpened);
+
+  // FIX #2: pakai enabled flag, bukan magic number 99999999
+  const { displayed, done } = useTypingAnimation(GIFT_LETTER, 20, showLetter);
 
   const handleOpen = () => {
     setGiftOpened(true);
     setTimeout(() => setShowLetter(true), 800);
   };
 
-  if (!riddleSolved) {
-    return (
-      <div className="min-h-screen pt-24 flex flex-col items-center justify-center px-4">
-        <div className="glass-card p-10 text-center max-w-sm">
-          <Lock size={48} className="text-gray-600 mx-auto mb-4" />
-          <h3 className="font-cinzel text-xl text-gray-400 mb-2">
-            Masih Terkunci
-          </h3>
-          <p className="font-exo text-sm text-gray-500">
-            Selesaikan teka-teki terlebih dahulu untuk membuka hadiah ini.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  if (!riddleSolved) return <Locked />;
 
   return (
-    <div className="relative min-h-screen pt-24 pb-12 px-4 overflow-hidden">
-      {/* Planets */}
-      <FloatingPlanet size={55} color="#f59e0b" x="5%" y="10%" animDelay={0} />
-      <FloatingPlanet
-        size={45}
-        color="#7c3aed"
-        x="88%"
-        y="20%"
-        animDelay={1.5}
-        hasRing
+    <div
+      className="relative min-h-screen pb-24 px-4 overflow-hidden"
+      style={{
+        background: "#07080d",
+        // FIX #5: safe area inset untuk navbar
+        paddingTop: "calc(80px + env(safe-area-inset-top, 0px))",
+      }}
+    >
+      {/* Grain overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none z-10 opacity-[0.018]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: "128px",
+        }}
       />
-      <FloatingPlanet size={70} color="#ec4899" x="85%" y="65%" animDelay={2} />
 
-      <div className="max-w-2xl mx-auto relative z-10">
+      {/* FIX #16: Ambient glow pakai % bukan px agar tidak overflow di mobile */}
+      <div
+        className="fixed pointer-events-none z-0"
+        style={{
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(600px, 100vw)",
+          height: "400px",
+          background:
+            "radial-gradient(ellipse at 50% 50%, rgba(79,110,247,0.05) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="max-w-xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-yellow-500" />
-            <Gift size={18} className="text-yellow-400" />
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-yellow-500" />
+        <div
+          className="text-center mb-12"
+          style={{ animation: "rise 0.8s cubic-bezier(0.16,1,0.3,1) both" }}
+        >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div
+              className="h-px w-16"
+              style={{
+                background:
+                  "linear-gradient(to right, transparent, rgba(79,110,247,0.4))",
+              }}
+            />
+            <span style={{ fontSize: "14px" }}>✦</span>
+            <div
+              className="h-px w-16"
+              style={{
+                background:
+                  "linear-gradient(to left, transparent, rgba(79,110,247,0.4))",
+              }}
+            />
           </div>
-          <h2 className="font-cinzel text-3xl md:text-4xl font-bold mb-2">
-            <span className="gradient-text-gold">Hadiahmu</span>
-          </h2>
-          <p className="font-exo text-gray-400 text-sm">
+
+          <p
+            className="mb-3"
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: "10px",
+              letterSpacing: "0.2em",
+              color: "rgba(79,110,247,0.6)",
+              textTransform: "uppercase",
+            }}
+          >
+            Hadiah Untukmu
+          </p>
+          <h1 className="text-[clamp(26px,5vw,38px)] font-bold tracking-tight leading-tight text-white mb-3">
+            Hadiahmu
+          </h1>
+          <p className="text-sm text-white/40 leading-relaxed max-w-xs mx-auto mb-7">
             — disiapkan khusus untukmu, dari jauh —
           </p>
         </div>
 
-        {/* Envelope gift */}
+        {/* FIX #4: Envelope hanya render kalau belum dibuka */}
         {!giftOpened && (
-          <EnvelopeGift onOpen={handleOpen} opened={giftOpened} />
+          <div
+            style={{
+              animation: "rise 0.8s cubic-bezier(0.16,1,0.3,1) 0.15s both",
+            }}
+          >
+            <EnvelopeGift onOpen={handleOpen} />
+          </div>
         )}
 
-        {/* Gift letter */}
+        {/* Letter */}
         {giftOpened && (
-          <div className="page-enter">
-            {/* Confetti-like stars header */}
-            <div className="flex justify-center gap-2 mb-6">
-              {[...Array(9)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={i === 4 ? 28 : 16}
-                  className="text-yellow-400 fill-yellow-400"
-                  style={{
-                    animation: `twinkle ${1 + i * 0.2}s ease-in-out infinite`,
-                    animationDelay: `${i * 0.1}s`,
-                    transform: `rotate(${(i - 4) * 10}deg)`,
-                  }}
-                />
-              ))}
+          <div
+            style={{ animation: "rise 0.8s cubic-bezier(0.16,1,0.3,1) both" }}
+          >
+            {/* Star row */}
+            <div className="flex justify-center gap-2 mb-7">
+              {[0, 1, 2, 3, 4].map(
+                (
+                  i, // FIX #14: pakai value konkret, bukan index dari Array.from
+                ) => (
+                  <span
+                    key={i}
+                    style={{
+                      fontSize: i === 2 ? "18px" : "11px",
+                      color: "rgba(79,110,247,0.6)",
+                      animation: `twinkle ${1 + i * 0.2}s ease-in-out infinite`,
+                      animationDelay: `${i * 0.12}s`,
+                    }}
+                  >
+                    ✦
+                  </span>
+                ),
+              )}
             </div>
 
+            {/* Letter card */}
             <div
-              className="glass-card-strong p-6 md:p-10 relative overflow-hidden"
+              className="relative rounded-xl overflow-hidden"
               style={{
-                border: "1px solid rgba(251,191,36,0.2)",
-                boxShadow: "0 0 80px rgba(251,191,36,0.08)",
+                background: "rgba(13,15,24,0.95)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                boxShadow: "0 0 60px rgba(79,110,247,0.06)",
+                backdropFilter: "blur(12px)",
               }}
             >
-              {/* Gold top bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600" />
-
-              {/* Decorative corner stars */}
-              {[...Array(8)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={8}
-                  className="absolute text-yellow-400 fill-yellow-400"
-                  style={{
-                    top: i < 4 ? `${4 + i * 8}%` : undefined,
-                    bottom: i >= 4 ? `${4 + (i - 4) * 8}%` : undefined,
-                    right: "2%",
-                    opacity: 0.4,
-                  }}
-                />
-              ))}
-
+              {/* Top accent line */}
               <div
-                className="font-exo text-gray-200 leading-relaxed whitespace-pre-line text-sm md:text-base"
-                style={{ minHeight: "300px" }}
-              >
-                {displayed}
-                {!done && <span className="typing-cursor" />}
-              </div>
+                className="absolute top-0 left-0 right-0 h-px"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(79,110,247,0.5), transparent)",
+                }}
+              />
 
-              {done && (
-                <div className="mt-8 pt-6 border-t border-yellow-400/10 flex flex-col items-center gap-3">
-                  <div className="flex gap-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Heart
-                        key={i}
-                        size={20}
-                        className="text-pink-400 fill-pink-400"
-                        style={{
-                          animation: `twinkle ${1 + i * 0.2}s ease-in-out infinite`,
-                          animationDelay: `${i * 0.15}s`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <p className="font-cinzel text-yellow-400 text-sm text-glow-gold text-center">
-                    Happy 18th Birthday, Eka Meilani ✨
-                  </p>
+              {/* FIX #9: padding lebih kecil di mobile */}
+              <div className="p-5 sm:p-7 md:p-10">
+                <div
+                  className="whitespace-pre-line leading-relaxed"
+                  style={{
+                    fontFamily: "'Syne', sans-serif",
+                    // FIX #10: minimum font size 14px untuk readability
+                    fontSize: "clamp(14px, 1.8vw, 15px)",
+                    color: "rgba(255,255,255,0.7)",
+                    minHeight: "300px",
+                  }}
+                >
+                  {displayed}
+                  {!done && (
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "2px",
+                        height: "1em",
+                        background: "rgba(79,110,247,0.8)",
+                        marginLeft: "2px",
+                        verticalAlign: "text-bottom",
+                        animation: "blink 1s step-end infinite",
+                      }}
+                    />
+                  )}
                 </div>
-              )}
+
+                {done && (
+                  <div
+                    className="mt-8 pt-6 flex flex-col items-center gap-3"
+                    style={{
+                      borderTop: "1px solid rgba(255,255,255,0.05)",
+                      animation: "rise 0.8s cubic-bezier(0.16,1,0.3,1) both",
+                    }}
+                  >
+                    <div className="flex gap-2">
+                      {[0, 1, 2, 3, 4].map(
+                        (
+                          i, // FIX #14
+                        ) => (
+                          <span
+                            key={i}
+                            style={{
+                              fontSize: "14px",
+                              color: "rgba(79,110,247,0.5)",
+                              animation: `twinkle ${1 + i * 0.2}s ease-in-out infinite`,
+                              animationDelay: `${i * 0.15}s`,
+                            }}
+                          >
+                            ♡
+                          </span>
+                        ),
+                      )}
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: "'Space Mono', monospace",
+                        fontSize: "11px",
+                        letterSpacing: "0.12em",
+                        color: "rgba(79,110,247,0.7)",
+                        textAlign: "center",
+                      }}
+                    >
+                      Happy 18th Birthday, Eka Meilani ✨
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
+
+      <style>{`
+        @keyframes rise {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(0.9); }
+          50%       { opacity: 1;   transform: scale(1.1); }
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
