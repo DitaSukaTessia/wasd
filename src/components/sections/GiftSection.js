@@ -319,11 +319,17 @@ function Locked() {
 export default function GiftSection() {
   const { riddleSolved, giftOpened, setGiftOpened } = useApp();
 
-  // FIX #1: showLetter langsung true kalau giftOpened sudah true (user balik ke halaman)
-  const [showLetter, setShowLetter] = useState(giftOpened);
+  const isReturning = useRef(giftOpened); // capture initial value, never changes
 
-  // FIX #2: pakai enabled flag, bukan magic number 99999999
-  const { displayed, done } = useTypingAnimation(GIFT_LETTER, 20, showLetter);
+  const [showLetter, setShowLetter] = useState(giftOpened);
+  const { displayed, done } = useTypingAnimation(
+    GIFT_LETTER,
+    20,
+    showLetter ? 0 : 99999999,
+  );
+
+  const finalDisplayed = isReturning.current ? GIFT_LETTER : displayed;
+  const finalDone = isReturning.current ? true : done;
 
   const handleOpen = () => {
     setGiftOpened(true);
@@ -476,8 +482,8 @@ export default function GiftSection() {
                     minHeight: "300px",
                   }}
                 >
-                  {displayed}
-                  {!done && (
+                  {finalDisplayed}
+                  {!finalDone && (
                     <span
                       style={{
                         display: "inline-block",
@@ -492,7 +498,7 @@ export default function GiftSection() {
                   )}
                 </div>
 
-                {done && (
+                {finalDone && (
                   <div
                     className="mt-8 pt-6 flex flex-col items-center gap-3"
                     style={{

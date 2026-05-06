@@ -62,41 +62,36 @@ const RIDDLES = [
 
 // ── Star field ──────────────────────────────────────────────────────────────
 function StarField() {
-  const stars = Array.from({ length: 80 }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    duration: `${2 + Math.random() * 4}s`,
-    delay: `${-Math.random() * 5}s`,
-    opacity: 0.2 + Math.random() * 0.5,
-  }));
+  const [stars, setStars] = useState([]);
+
+  useEffect(() => {
+    setStars(
+      Array.from({ length: 80 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: `${2 + Math.random() * 4}s`,
+        delay: `${-Math.random() * 5}s`,
+      })),
+    );
+  }, []);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {stars.map((s) => (
         <span
           key={s.id}
-          className="absolute w-px h-px rounded-full bg-white animate-[twinkle_var(--dur)_ease-in-out_infinite]"
+          className="absolute w-px h-px rounded-full bg-white"
           style={{
             left: s.left,
             top: s.top,
-            "--dur": s.duration,
-            animationDelay: s.delay,
-            opacity: 0,
             animation: `twinkle ${s.duration} ease-in-out ${s.delay} infinite`,
           }}
         />
       ))}
-      <style>{`
-        @keyframes twinkle {
-          0%, 100% { opacity: 0; transform: scale(0.5); }
-          50%       { opacity: ${0.4}; transform: scale(1); }
-        }
-      `}</style>
     </div>
   );
 }
-
 // ── Riddle Card ─────────────────────────────────────────────────────────────
 function RiddleCard({ riddle, index, solved, onAnswer }) {
   const [input, setInput] = useState("");
