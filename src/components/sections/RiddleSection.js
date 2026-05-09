@@ -6,57 +6,52 @@ import { useApp } from "../../lib/AppContext";
 const RIDDLES = [
   {
     id: 1,
-    icon: "🌍",
-    question:
-      "Aku berputar mengelilingi Matahari, punya satu satelit yang setia, dan merupakan satu-satunya tempat yang diketahui manusia memiliki kehidupan. Siapakah aku?",
-    hint: "Rumahmu, rumahku, dan rumah semua makhluk hidup.",
-    answers: ["bumi", "earth", "planet bumi"],
-    category: "Planet",
+    icon: "1",
+    question: "Siapa cewe yang hari ini makin tua (+1 tahun)?",
+    hint: "citalahab, pandeglang, kesayangan dita",
+    answers: ["eka meilani", "eka", "meilani"],
+    category: "mudah",
   },
   {
     id: 2,
-    icon: "⭐",
+    icon: "2",
     question:
-      "Aku bukan bintang, bukan bulan. Di malam hari aku bersinar dengan cahaya yang aku pinjam. Aku mengelilingi planet seperti penari balet yang setia. Apakah aku?",
-    hint: "Bumi punya satu dariku, Saturnus punya puluhan.",
-    answers: ["bulan", "satelit", "moon", "satelit alami"],
-    category: "Satelit",
+      "decrypt bilangan biner berikut: 01001001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101",
+    hint: (
+      <a
+        href="https://www.rapidtables.com/convert/number/binary-to-ascii.html"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        manusia membaca rangkaian kata. mesin membaca 0 dan 1.
+      </a>
+    ),
+    answers: ["i love you", "I love you"],
+    category: "susah",
   },
   {
     id: 3,
-    icon: "🪐",
-    question:
-      "Aku planet terbesar di tata surya, punya Bintik Merah Raksasa — badai yang sudah berlangsung ratusan tahun. Aku raja dari semua planet, tapi bukan yang paling terkenal dengan cincinnya.",
-    hint: "Aku raja dari semua planet, namun Saturnus yang lebih terkenal dengan cincinnya.",
-    answers: ["jupiter", "yupiter"],
-    category: "Planet Raksasa",
+    icon: "3",
+    question: "kamu sayang dita ngga?",
+    hint: "nyari apa lu? jelas lah ya",
+    answers: ["iyaa", "iya", "sayang"],
+    category: "mudah",
   },
   {
     id: 4,
-    icon: "🪐",
-    question:
-      "Aku planet terbesar di tata surya, punya Bintik Merah Raksasa — badai yang sudah berlangsung ratusan tahun. Aku raja dari semua planet, tapi bukan yang paling terkenal dengan cincinnya.",
-    hint: "Aku raja dari semua planet, namun Saturnus yang lebih terkenal dengan cincinnya.",
-    answers: ["jupiter", "yupiter"],
-    category: "Planet Raksasa",
+    icon: "4",
+    question: "siapa developer ganteng nan keren yang membuat website ini?",
+    hint: "raja iblis",
+    answers: ["dita", "anos", "ditaputa"],
+    category: "mudah",
   },
   {
     id: 5,
-    icon: "🪐",
-    question:
-      "Aku planet terbesar di tata surya, punya Bintik Merah Raksasa — badai yang sudah berlangsung ratusan tahun. Aku raja dari semua planet, tapi bukan yang paling terkenal dengan cincinnya.",
-    hint: "Aku raja dari semua planet, namun Saturnus yang lebih terkenal dengan cincinnya.",
-    answers: ["jupiter", "yupiter"],
-    category: "Planet Raksasa",
-  },
-  {
-    id: 6,
-    icon: "🪐",
-    question:
-      "Aku planet terbesar di tata surya, punya Bintik Merah Raksasa — badai yang sudah berlangsung ratusan tahun. Aku raja dari semua planet, tapi bukan yang paling terkenal dengan cincinnya.",
-    hint: "Aku raja dari semua planet, namun Saturnus yang lebih terkenal dengan cincinnya.",
-    answers: ["jupiter", "yupiter"],
-    category: "Planet Raksasa",
+    icon: "5",
+    question: "Complete the sentence: today is my ____ birthday.",
+    hint: "ordinal number suffix (st, nd, rd, th)",
+    answers: ["18th", "eighteenth"],
+    category: "sedang",
   },
 ];
 
@@ -229,9 +224,9 @@ function RiddleCard({ riddle, index, solved, onAnswer }) {
           {/* Hint toggle */}
           <button
             onClick={() => setShowHint((v) => !v)}
-            className="font-mono text-[11px] text-white/20 hover:text-indigo-400 transition-colors duration-200"
+            className="font-mono text-[11px] text-white/30 hover:text-indigo-400 transition-colors duration-200"
           >
-            {showHint ? "− Sembunyikan" : "+ Petunjuk"}
+            {showHint ? "− Sembunyikan" : "+ hint?"}
           </button>
 
           {showHint && (
@@ -359,7 +354,7 @@ export default function RiddleSection() {
               ? unlocking
                 ? "Membuka hadiah..."
                 : "Semua terjawab — Hadiah & Galeri terbuka!"
-              : "Jawab semua soal untuk membuka Hadiah & Galeri"}
+              : "Jawab semua soal untuk membuka Hadiah & Galeri (tips: tekan tombol hint klo kamu mumnet)"}
           </span>
         </div>
 
@@ -382,7 +377,7 @@ export default function RiddleSection() {
             <div className="bg-[#0d0f18] border border-emerald-500/20 rounded-xl p-8 text-center animate-[rise_0.8s_cubic-bezier(0.16,1,0.3,1)_both]">
               <p className="text-2xl mb-3 text-emerald-400">✦</p>
               <h3 className="text-xl font-bold tracking-tight text-emerald-400 mb-2">
-                Luar Biasa!
+                Nice Babe!
               </h3>
               <p className="font-mono text-xs text-white/30 mb-6">
                 Semua terjawab — Hadiah & Galeri terbuka.

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const AppContext = createContext(null);
 
@@ -8,8 +8,15 @@ export function AppProvider({ children }) {
   const [riddleSolved, setRiddleSolved] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
   const [giftOpened, setGiftOpened] = useState(false);
-  const [launched, setLaunched] = useState(false); // after intro
+  const [launched, setLaunched] = useState(false);
   const [letterOpened, setLetterOpened] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage]);
 
   return (
     <AppContext.Provider

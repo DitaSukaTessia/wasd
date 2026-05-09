@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { useApp } from "../../lib/AppContext";
 import { useTypingAnimation } from "../../hooks/useTypingAnimation";
 
-const line1 = "Selamat Ulang Tahun ke-18 ";
+const line1 = "selamat ulang tahun ke-18 ";
 const line2 = "Eka Meilani";
 const line3 =
-  "Semoga semua impianmu setinggi bintang-bintang di langit, dan setiap harimu selalu bersinar seperti supernova.";
+  "semoga panjang umur sayang, aku harap semua keinginan dan mimpi kamu bisa tercapai";
 
 // ── Star field ───────────────────────────────────────────────────────────────
 // FIX hydration: Math.random() hanya jalan di client via useEffect

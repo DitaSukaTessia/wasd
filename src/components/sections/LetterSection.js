@@ -4,23 +4,19 @@ import { useState, useRef } from "react";
 import { useApp } from "../../lib/AppContext";
 import { useTypingAnimation } from "../../hooks/useTypingAnimation";
 
-const LETTER_TEXT = `Hii Eka... 💫
- 
-Hari ini, tepat di hari ulang tahunmu yang ke-18, aku ingin bilang satu hal yang mungkin udah kamu tau — tapi selalu layak untuk diulang.
- 
-Kamu itu luar biasa. Bukan karena sempurna, tapi karena kamu selalu jadi dirimu sendiri — dengan segala senyum, gelak tawa, dan kehangatanmu yang bikin dunia ini terasa lebih cerah.
- 
-Delapan belas tahun... itu berarti kamu udah hidup melewati 6.570 hari, dan setiap harinya pasti ada momen yang membentuk dirimu jadi yang sekarang — seseorang yang aku sangat bersyukur bisa kenal.
- 
-Aku berharap tahun ke-18 ini jadi awal dari babak baru yang indah untukmu. Penuh mimpi, penuh keberanian, penuh hal-hal baik yang kamu pantas dapat.
- 
-Seperti bintang-bintang di langit malam ini, semoga cahayamu terus bersinar — meskipun jarak dan waktu kadang memisahkan.
- 
-Selamat ulang tahun, Eka Meilani. 🌟
-Semoga semua yang terbaik selalu menyertaimu.
- 
-Dengan sepenuh hati,
-Seseorang yang peduli padamu ✨`;
+const LETTER_TEXT = `Haii eka meilani
+
+happy birthday yaa eksayaangg
+
+18 tahun bukan waktu yang sebentar. kamu udah ngelewatin banyak hal sampe bisa jadi diri kamu yang sekarang. dan jujur, aku bersyukur banget bisa kenal kamu, bisa deket sama kamu sampe sekarang, makasi sayang aku harap aku bakal selamanya ada di hidup kamu.
+
+di umur yang baru ini, aku harap banyak hal baik datang ke kamu. semoga semua mimpi, keinginan, dan hal-hal yang lagi kamu perjuangin bisa pelan-pelan tercapai. semoga kamu selalu dikasih kesehatan, panjang umur, banyak kebahagiaan, dan orang-orang baik di sekitar kamu.
+
+18 itu awal dari bab baru kan ya. semoga bab ini jadi bab yang indah buat kamu karena kali ini kamu bakal menghadapi hiruk pikuk dunia yang sebenarnya. aku harap jalan kamu dimudahkan, dan kamu bisa menghadapi semua hal yang udah nunggu kamu di depan, good luck ekaa.
+
+sekali lagi makasi dan selamat ulang tahun, Eka Meilani 
+
+— made with love, ditaputa 🤍`;
 
 export default function LetterSection() {
   const { setCurrentPage, letterOpened, setLetterOpened } = useApp();
@@ -114,30 +110,13 @@ export default function LetterSection() {
               textTransform: "uppercase",
             }}
           >
-            Surat Untukmu
+            a letter for you
           </p>
-          <h1
-            style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: "clamp(26px, 5vw, 38px)",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              color: "rgba(255,255,255,0.9)",
-              lineHeight: 1.15,
-              marginBottom: "10px",
-            }}
-          >
-            Surat Untukmu
+          <h1 className="text-[clamp(30px,5vw,38px)] font-bold tracking-tight leading-tight text-white mb-3">
+            Pesan dari Raja Iblis
           </h1>
-          <p
-            style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: "13px",
-              color: "rgba(255,255,255,0.25)",
-              fontStyle: "italic",
-            }}
-          >
-            — dari suatu tempat di galaksi ini —
+          <p className="text-sm text-white/40 leading-relaxed max-w-xs mx-auto mb-7">
+            — blagung, 19 mei 2026 —
           </p>
         </div>
 
@@ -421,15 +400,15 @@ function EnvelopeButton({ onOpen }) {
       {/* Label */}
       <p
         style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: "15px",
+          fontFamily: "'Space Mono', monospace",
+          fontSize: "13px",
           fontWeight: 700,
           color: "rgba(255,255,255,0.75)",
           letterSpacing: "-0.01em",
           marginBottom: "4px",
         }}
       >
-        Untuk: Eka Meilani
+        for: Eka Meilani
       </p>
       <p
         style={{
@@ -439,7 +418,7 @@ function EnvelopeButton({ onOpen }) {
           color: opening ? "rgba(79,110,247,0.8)" : "rgba(79,110,247,0.5)",
         }}
       >
-        {opening ? "MEMBUKA..." : "DARI GALAKSI · DENGAN CINTA"}
+        {opening ? "MEMBUKA..." : "from dita · with love"}
       </p>
 
       <style>{`
