@@ -27,6 +27,38 @@ Selamat ulang tahun, Eka. Semoga 18 menjadi awal dari petualanganmu yang paling 
 Dengan segala ketulusan dari galaksi ini,
 Seseorang yang beruntung bisa mengenalmu 💜`;
 
+function StarField() {
+  const [stars, setStars] = useState([]);
+
+  useEffect(() => {
+    setStars(
+      Array.from({ length: 80 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: `${2 + Math.random() * 4}s`,
+        delay: `${-Math.random() * 5}s`,
+      })),
+    );
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {stars.map((s) => (
+        <span
+          key={s.id}
+          className="absolute w-px h-px rounded-full bg-white"
+          style={{
+            left: s.left,
+            top: s.top,
+            animation: `twinkle ${s.duration} ease-in-out ${s.delay} infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ── Particle burst ───────────────────────────────────────────────────────────
 // FIX #3: particles di-generate sekali dengan useMemo, bukan tiap render
 // FIX #13: onDone callback untuk unmount setelah animasi selesai
@@ -347,6 +379,7 @@ export default function GiftSection() {
         paddingTop: "calc(80px + env(safe-area-inset-top, 0px))",
       }}
     >
+      <StarField />
       {/* Grain overlay */}
       <div
         className="fixed inset-0 pointer-events-none z-10 opacity-[0.018]"

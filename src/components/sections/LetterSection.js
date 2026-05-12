@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useApp } from "../../lib/AppContext";
 import { useTypingAnimation } from "../../hooks/useTypingAnimation";
 
@@ -17,6 +17,37 @@ di umur yang baru ini, aku harap banyak hal baik datang ke kamu. semoga semua mi
 sekali lagi makasi dan selamat ulang tahun, Eka Meilani 
 
 — made with love, ditaputa 🤍`;
+function StarField() {
+  const [stars, setStars] = useState([]);
+
+  useEffect(() => {
+    setStars(
+      Array.from({ length: 80 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: `${2 + Math.random() * 4}s`,
+        delay: `${-Math.random() * 5}s`,
+      })),
+    );
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {stars.map((s) => (
+        <span
+          key={s.id}
+          className="absolute w-px h-px rounded-full bg-white"
+          style={{
+            left: s.left,
+            top: s.top,
+            animation: `twinkle ${s.duration} ease-in-out ${s.delay} infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function LetterSection() {
   const { setCurrentPage, letterOpened, setLetterOpened } = useApp();
@@ -52,6 +83,7 @@ export default function LetterSection() {
         paddingBottom: "80px",
       }}
     >
+      <StarField />
       {/* Grain overlay */}
       <div
         className="fixed inset-0 pointer-events-none z-10 opacity-[0.018]"

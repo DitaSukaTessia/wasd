@@ -4,14 +4,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 // ================= DATA =================
 const INITIAL_PHOTOS = [
-  { id: 1, src: "/assets/example.png" },
-  { id: 2, src: "/assets/example.png" },
-  { id: 3, src: "/assets/example.png" },
-  { id: 4, src: "/assets/example.png" },
-  { id: 5, src: "/assets/example.png" },
-  { id: 6, src: "/assets/example.png" },
-  { id: 7, src: "/assets/example.png" },
-  { id: 8, src: "/assets/example.png" },
+  { id: 1, src: "/assets/eka1pt2.jpg" },
+  { id: 2, src: "/assets/eka2.jpg" },
+  { id: 3, src: "/assets/eka3.jpg" },
+  { id: 4, src: "/assets/eka4pt2.jpg" },
+  { id: 5, src: "/assets/eka5.jpeg" },
+  { id: 6, src: "/assets/eka6.jpg" },
+  { id: 7, src: "/assets/eka7.jpg" },
+  { id: 8, src: "/assets/eka8.jpg" },
+  { id: 9, src: "/assets/eka9.jpeg" },
+  { id: 10, src: "/assets/eka10.jpeg" },
+  { id: 11, src: "/assets/eka11.jpeg" },
 ];
 
 const getSizeStyle = (index, isMobile) => {
@@ -32,6 +35,38 @@ const getSizeStyle = (index, isMobile) => {
     flexShrink: 0,
   };
 };
+
+function StarField() {
+  const [stars, setStars] = useState([]);
+
+  useEffect(() => {
+    setStars(
+      Array.from({ length: 80 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: `${2 + Math.random() * 4}s`,
+        delay: `${-Math.random() * 5}s`,
+      })),
+    );
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {stars.map((s) => (
+        <span
+          key={s.id}
+          className="absolute w-px h-px rounded-full bg-white"
+          style={{
+            left: s.left,
+            top: s.top,
+            animation: `twinkle ${s.duration} ease-in-out ${s.delay} infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 // ================= PHOTO ITEM =================
 function PhotoItem({ photo, onClick, index, isMobile }) {
@@ -384,7 +419,7 @@ export default function Gallery() {
         paddingTop: "80px",
       }}
     >
-      {/* Grain overlay */}
+      <StarField />;{/* Grain overlay */}
       <div
         className="fixed inset-0 pointer-events-none z-10 opacity-[0.025]"
         style={{
@@ -392,7 +427,6 @@ export default function Gallery() {
           backgroundSize: "128px",
         }}
       />
-
       {/* HEADER */}
       <header className="relative px-5 sm:px-10 md:px-16 pb-4 sm:pb-6">
         <h1
@@ -437,7 +471,6 @@ export default function Gallery() {
           </p>
         </div>
       </header>
-
       {/* GALLERY ROWS atau EMPTY STATE */}
       {isEmpty ? (
         // FIX #10: Empty state
@@ -488,7 +521,6 @@ export default function Gallery() {
           />
         </div>
       )}
-
       {/* FOOTER */}
       <footer
         className="relative px-5 sm:px-10 md:px-16 py-5 sm:py-14"
@@ -535,7 +567,6 @@ export default function Gallery() {
           </p>
         </div>
       </footer>
-
       <UploadButton onUpload={handleUpload} />
       <Modal photo={selected} onClose={() => setSelected(null)} />
     </div>
