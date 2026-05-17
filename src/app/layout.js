@@ -5,27 +5,8 @@ import { useState, useEffect } from "react";
 import { AppProvider } from "../lib/AppContext";
 import CustomCursor from "../components/ui/CustomCursor";
 import AudioPlayer from "../components/ui/AudioPlayer";
-import Lenis from "@studio-freight/lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function RootLayout({ children }) {
-  useEffect(() => {
-    const lenis = new Lenis({
-      smooth: true,
-      lerp: 0.08,
-    });
-
-    lenis.on("scroll", ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-
-    return () => lenis.destroy();
-  }, []);
   return (
     <html lang="id">
       <head>

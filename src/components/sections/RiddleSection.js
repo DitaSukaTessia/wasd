@@ -53,6 +53,15 @@ const RIDDLES = [
     answers: ["18th", "eighteenth"],
     category: "sedang",
   },
+  {
+    id: 6,
+    icon: "6",
+    question:
+      "Convert this binary number to alphabet: 01101000 01100001 01110000 01110000 01111001 00100000 01100010 01101001 01110010 01110100 01101000 01100100 01100001 01111001 00100000 01100101 01101011 01100001 01100001 01100001",
+    hint: "di hint no 2 seng",
+    answers: ["happy birthday ekaaa"],
+    category: "susah",
+  },
 ];
 
 // ── Star field ──────────────────────────────────────────────────────────────
