@@ -565,7 +565,7 @@ function EnvelopeGift({ onOpen }) {
                 letterSpacing: "-0.01em",
               }}
             >
-              Hadiah Spesialmu
+              Your Special Gift
             </p>
             <p
               style={{
@@ -577,7 +577,7 @@ function EnvelopeGift({ onOpen }) {
                   : "rgba(79,110,247,0.6)",
               }}
             >
-              {opening ? "MEMBUKA..." : "KLIK UNTUK MEMBUKA"}
+              {opening ? "OPENING..." : "CLICK TO OPEN"}
             </p>
           </div>
         </div>
@@ -592,7 +592,7 @@ function EnvelopeGift({ onOpen }) {
             color: "rgba(255,255,255,0.2)",
           }}
         >
-          ✦ &nbsp;KETUK KADO&nbsp; ✦
+          ✦ &nbsp;CLICK THE GIFT&nbsp; ✦
         </p>
       )}
     </div>
@@ -637,7 +637,7 @@ function Locked() {
             color: "rgba(255,255,255,0.4)",
           }}
         >
-          Masih Terkunci
+          Still Locked
         </p>
         <p
           style={{
@@ -647,7 +647,7 @@ function Locked() {
             color: "rgba(255,255,255,0.2)",
           }}
         >
-          Selesaikan teka-teki terlebih dahulu untuk membuka hadiah ini.
+          Complete the riddle first to unlock this gift.
         </p>
       </div>
       <style>{`@keyframes rise { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }`}</style>
@@ -751,13 +751,13 @@ export default function GiftSection() {
               textTransform: "uppercase",
             }}
           >
-            Hadiah Untukmu
+            Your Special Gift
           </p>
           <h1 className="text-[clamp(26px,5vw,38px)] font-bold tracking-tight leading-tight text-white mb-3">
-            Hadiahmu
+            Your Gift
           </h1>
           <p className="text-sm text-white/40 leading-relaxed max-w-xs mx-auto mb-7">
-            — disiapkan khusus untukmu, dari jauh —
+            — specially prepared for you, from afar —
           </p>
         </div>
 
