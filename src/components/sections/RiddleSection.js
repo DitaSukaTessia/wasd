@@ -16,7 +16,7 @@ const RIDDLES = [
     id: 2,
     icon: "2",
     question:
-      "decrypt bilangan biner berikut: 01001001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101",
+      "Convert this binary number to alphabet: 01001001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101",
     hint: (
       <a
         href="https://www.rapidtables.com/convert/number/binary-to-ascii.html"
@@ -57,10 +57,19 @@ const RIDDLES = [
     id: 6,
     icon: "6",
     question:
-      "Convert this binary number to alphabet: 01101000 01100001 01110000 01110000 01111001 00100000 01100010 01101001 01110010 01110100 01101000 01100100 01100001 01111001 00100000 01100101 01101011 01100001 01100001 01100001",
-    hint: "di hint no 2 seng",
-    answers: ["happy birthday ekaaa"],
-    category: "susah",
+      "FORENSIC TASK: Evidence file ditemukan di server eksternal. File tampak seperti PDF biasa, namun analis mencurigai file extension tidak sesuai. Recover hidden message.",
+    hint: (
+      <a
+        href="https://raw.githubusercontent.com/DitaSukaTessia/file-evidence/main/hbd.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        open external evidence file, important: sometimes the file is just a
+        placeholder. try opening it in a different format.
+      </a>
+    ),
+    answers: ["happy birthday", "Happy Birthday", "HAPPY BIRTHDAY"],
+    category: "forensics",
   },
 ];
 

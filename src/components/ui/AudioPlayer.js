@@ -8,15 +8,20 @@ export default function AudioPlayer() {
   const [volume, setVolume] = useState(0.4);
   const [showVolume, setShowVolume] = useState(false);
 
-  const audioSrc =
-    "https://cdn.pixabay.com/download/audio/2022/03/15/audio_8cb749f7e7.mp3";
+  const audioSrc = "/wasd.mp3";
 
+  // Run once on mount — set initial volume and loop, cleanup on unmount
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
       audioRef.current.loop = true;
     }
-  }, [volume]);
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
 
   const toggle = async () => {
     if (!audioRef.current) return;
@@ -48,7 +53,6 @@ export default function AudioPlayer() {
             animation: "slideIn 0.25s cubic-bezier(0.16,1,0.3,1) both",
           }}
         >
-          {/* Mute icon */}
           <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.25)" }}>
             {volume === 0 ? "○" : "◉"}
           </span>
@@ -58,6 +62,7 @@ export default function AudioPlayer() {
             max="1"
             step="0.05"
             value={volume}
+            aria-label="Volume"
             onChange={(e) => {
               const v = parseFloat(e.target.value);
               setVolume(v);
@@ -100,7 +105,7 @@ export default function AudioPlayer() {
         {/* Icon */}
         <span
           style={{
-            fontSize: "13px",
+            fontSize: "16px",
             color: playing ? "rgba(79,110,247,0.9)" : "rgba(255,255,255,0.3)",
             transition: "color 0.2s",
             lineHeight: 1,
@@ -110,7 +115,15 @@ export default function AudioPlayer() {
         </span>
       </button>
 
-      <audio ref={audioRef} src={audioSrc} preload="none" />
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        preload="none"
+        onEnded={() => {
+          setPlaying(false);
+          setShowVolume(false);
+        }}
+      />
 
       <style>{`
         @keyframes slideIn {

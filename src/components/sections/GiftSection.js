@@ -6,28 +6,32 @@ import { useTypingAnimation } from "../../hooks/useTypingAnimation";
 
 const GIFT_LETTER = `For Eka Meilani 
 
-mantap seng, gimana soal nya susah ga? wkwk. Great job, sayang 🤍
+mantap seng, gimana soal nya susah ga? wkwk. great job, sayang 🤍
 
-Jujur, aku bikin semua ini bukan karena pengen ngasih sesuatu yang wah atau mahal. Aku cuma pengen bikin kamu ngerasain satu hal: kalau hari ini ada seseorang yang bener-bener effort buat bikin kamu senyum, itu aku.
+eka meilaniii. panjang umur yaa sayangg, semoga semua hal" yang kamu inginkan bisa tercapaii satu per satu aku percaya itu semua hanya masalah waktu, semangatt eksayang. 
 
-Mungkin ini cuma website kecil, beberapa puzzle random, sama foto-foto yang aku siapin. Tapi di balik itu, ada niat tulus buat bikin hari ulang tahun kamu terasa sedikit lebih spesial.
+sehat selalu seng, aku minta nanti mau sesibuk apapun kamu dalam menghadapi segala tantangan dunia ini kamu harus tetep jaga kesehatan yaa, jangan lupa makan, istirahat yang cukup, dan jangan terlalu keras sama diri sendiri pokoknya, teruss terrakhir klo ada apa" kamu bisa cerita ke aku okee?
 
-Aku cuma mau bilang... makasih.
+eksayang maaf yaa cuma ini yang bisa aku kasih buat bikin hari ulang tahun kamu kerasa sedikit lebih spesial xixi, maaf aku gabisa kasih kue aku gabisa kasih hadiah secara langsung aku juga gabisa rayain ulang tahun kamu secara langsung. tapi aku harap kamu suka sama hadiah kecil ini.
 
-Makasih karena udah hadir di hidup aku. Makasih buat semua obrolan, semua momen, semua hal kecil yang mungkin kamu nganggep biasa, tapi buat aku berarti.
+babe, thanks yaa.
 
-Kamu itu orang yang bikin hari-hari tertentu terasa lebih seru. Kadang cuma dari chat sederhana aja udah cukup buat bikin mood naik.
+makasih karena udah hadir di hidup aku. makasih buat semua obrolan, semua momen, semua hal kecil yang mungkin kamu anggep biasa, tapi buat aku itu luar biasa.
 
-Di umur kamu yang ke-18 ini, aku harap banyak hal baik datang ke kamu. Semoga semua mimpi dan hal yang lagi kamu perjuangin pelan-pelan nemuin jalannya. Semoga kamu selalu sehat, bahagia, kuat, dan dikelilingi orang-orang yang sayang sama kamu.
+terakhir, makasih karena udah kasih aku kesempatan setelah apa yang aku lakuin kemaren. sama aku terus yaa babe, aku bakal bikin semua luka yang udah aku kasih ke kamu jadi sesuatu yang ga ada apa"nya dibanding semua hal baik yang bakal aku kasih ke kamu nanti.
 
-18 itu bukan angka kecil sih wkwk. Bab baru dimulai dari sini. Dunia mungkin nggak selalu ramah, tapi aku harap kamu tetep jadi Eka yang kuat, hangat, dan selalu punya alasan buat senyum.
+betapa bodohnya diri ini klo aku mengulangi kesalahan yang sama. aku harap aku ga cuma yapping doang, aku harap aku bisa buktiin semua hal baik yang aku bilang tadi ke kamu, seseorang yang selalu bisa bikin kamu ngerasa dicintai, dan seseorang yang selalu bisa bikin kamu ngerasa dihargai.
 
-Dan kalau suatu hari semuanya terasa berat, aku cuma mau kamu tau kalau ada seseorang di sini yang selalu dukung kamu.
+di umur kamu yang ke-18 ini, aku harap banyak hal baik datang ke kamu. semoga semua mimpi dan hal yang lagi kamu perjuangin pelan-pelan nemuin jalannya. semoga kamu selalu sehat, bahagia, kuat, dan dikelilingi orang-orang yang baik dan sayang sama kamu.
 
-Sekali lagi, selamat ulang tahun ya, Eka 🤍
-Semoga hari ini penuh senyum, cake, dan hal-hal baik yang kamu pantas dapetin.
+18 tuh bukan angka kecil lagi sih wkwk. bab baru dimulai dari sini, dunia mungkin ga selalu ramah, tapi aku harap kamu tetep jadi Eka yang kuat, dan selalu punya alasan buat bahagia.
 
-— dibuat dengan sepenuh hati, ditaputa 🖤`;
+dan klo suatu hari semuanya terasa berat, aku cuma mau kamu tau kalau ada seseorang di sini yang selalu dukung kamu dan siap buat dengerin semua cerita kamu.
+
+sekali lagi, selamat ulang tahun ekaa
+have a great day babe, love you 🤍
+
+— with love, ditaputa 🖤`;
 
 // ── Birthday Cake (SVG animated + candles on top) ───────────────────────────
 function BirthdayCake() {
